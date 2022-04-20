@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ARTS1422_HW1_Jinze_Shi</title>
+        <script src = 'https://d3js.org/d3.v4.js'></script>
+    </head>
+    <body>
+        <svg width = "2500" height = "1400" id = "mainsvg" class = "svgs"></svg> 
+        <script>
+            
+            var margin = {top:20,right:20,left:20,bottom:20};
+            var mainsvg = d3.select("#mainsvg");
+            var width = +mainsvg.attr('width');
+            var height = +mainsvg.attr('height');
+            var innerWidth = width - margin.left - margin.right- margin.left - margin.right;
+            var innerHeight = height - margin.top - margin.bottom;
+
+            // 设置背景**************************************************************************************************************************************************
+            mainsvg.append("rect")
+                    .attr("y", 0)
+                    .attr("x", 0)
+                    .attr("width", width)
+                    .attr("height", height)
+                    .style("fill", 'black')
+                    .attr('opacity')
+
+            //设置边框**************************************************************************************************************************************************
+            mainsvg.append("rect")
+                    .attr("y", margin.top)
+                    .attr("x", margin.left)
+                    .attr("width", width-margin.top-margin.bottom)
+                    .attr("height", height-margin.right-margin.left)
+                    .style("fill", 'none')
+                    .style('stroke','white')
+
+            //显示标题**************************************************************************************************************************************************
+            mainsvg.append("text")
+            .attr("y", margin.top+40)
+            .attr("x", margin.left + 900)
+            .text("上海 2022 春季疫情可视化分析")
+            .attr('font-size','2.5em').attr('fill','#99ccff').attr('stroke','none');
+
+            mainsvg.append("line")
+            .style("stroke", "white")
+            .style("stroke-width", 1)
+            .attr("x1", margin.left + 750)
+            .attr("y1", margin.top+50)
+            .attr("x2", margin.left + 1600)
+            .attr("y2", margin.top+50);
+
+            //显示日期**************************************************************************************************************************************************
+
+            mainsvg.append("text")
+            .attr("y", margin.top+90)
+            .attr("x", margin.left + 240)
+            .text("日期：")
+            .attr('font-size','1。5em').attr('fill','white').attr('stroke','none');
+
+            //显示上三角
+
+            var uptriangle = d3.symbol().type(d3.symbolTriangle).size(100)
+
+            mainsvg.append("path")
+            .attr('d',uptriangle)
+            .attr('fill','#99ccff')
+            .attr('transform','translate(500,95)')
+
+            //显示下三角
+
+            var downtriangle = d3.symbol().type(d3.symbolTriangle).size(100)
+            
+            mainsvg.append("path")
+            .attr('d',downtriangle)
+            .attr('fill','#99ccff')
+            .attr('transform','translate(500,115) rotate(180) ')
+
+            
+            //显示新增确诊**************************************************************************************************************************************************
+
+            mainsvg.append("text")
+            .attr("y", margin.top+90)
+            .attr("x", margin.left + 540)
+            .text("新增确诊：")
+            .attr('font-size','1em').attr('fill','white').attr('stroke','none');
+
+            //显示累计确诊**************************************************************************************************************************************************
+
+            mainsvg.append("text")
+            .attr("y", margin.top+90)
+            .attr("x", margin.left + 840)
+            .text("累计确诊：")
+            .attr('font-size','1em').attr('fill','white').attr('stroke','none');
+
+            //显示新增无症状**************************************************************************************************************************************************
+
+            mainsvg.append("text")
+            .attr("y", margin.top+90)
+            .attr("x", margin.left + 1140)
+            .text("新增无症状：")
+            .attr('font-size','1em').attr('fill','white').attr('stroke','none');
+
+            //显示累计无症状**************************************************************************************************************************************************
+
+            mainsvg.append("text")
+            .attr("y", margin.top+90)
+            .attr("x", margin.left + 1440)
+            .text("累计无症状：")
+            .attr('font-size','1em').attr('fill','white').attr('stroke','none');
+
+            //显示确诊比例**************************************************************************************************************************************************
+
+            mainsvg.append("text")
+            .attr("y", margin.top+90)
+            .attr("x", margin.left + 1740)
+            .text("累计确诊比例 (%)：")
+            .attr('font-size','1em').attr('fill','white').attr('stroke','none');
+
+            //显示政策**************************************************************************************************************************************************
+
+             //显示背景
+            mainsvg.append("rect")
+            .attr("y", 140)
+            .attr("x", 50)
+            .attr("width", 800)
+            .attr("height", 100)
+            .attr('stroke','#99ccff')
+            .attr('opacity',.3)
+
+            //显示政策文字
+
+            mainsvg.append("text")
+            .attr("y", 160)
+            .attr("x", 60)
+            .text("当日政策：")
+            .attr('font-size','1em').attr('fill','white').attr('stroke','none');
+
+
+            //显示地图可视化背景**************************************************************************************************************************************************
+
+            mainsvg.append("rect")
+            .attr("y", 250)
+            .attr("x", 50)
+            .attr("width", 800)
+            .attr("height", 920)
+            .style("fill", '#99ccff')
+            .attr('opacity',.1)
+
+            //显示左上
+
+            mainsvg.append("line")
+            .style("stroke", "white")
+            .style("stroke-width", 1.5)
+            .attr("x1", 50)
+            .attr("y1",250)
+            .attr("x2", 90)
+            .attr("y2", 250);
+
+            mainsvg.append("line")
+            .style("stroke", "white")
+            .style("stroke-width", 1.5)
+            .attr("x1", 50)
+            .attr("y1",250)
+            .attr("x2", 50)
+            .attr("y2", 290);
+
+            //显示右上
+
+            mainsvg.append("line")
+            .style("stroke", "white")
+            .style("stroke-width", 1.5)
+            .attr("x1", 850)
+            .attr("y1",250)
+            .attr("x2", 810)
+            .attr("y2", 250);
+
+            mainsvg.append("line")
+            .style("stroke", "white")
+            .style("stroke-width", 1.5)
+            .attr("x1", 850)
+            .attr("y1",250)
+            .attr("x2", 850)
+            .attr("y2", 290);
+
+            //显示右下
+
+            mainsvg.append("line")
+            .style("stroke", "white")
+            .style("stroke-width", 1.5)
+            .attr("x1", 850)
+            .attr("y1",1170)
+            .attr("x2", 810)
+            .attr("y2", 1170);
+
+            mainsvg.append("line")
+            .style("stroke", "white")
+            .style("stroke-width", 1.5)
+            .attr("x1", 850)
+            .attr("y1",1170)
+            .attr("x2", 850)
+            .attr("y2", 1130);
+
+            //显示左下
+
+            mainsvg.append("line")
+            .style("stroke", "white")
+            .style("stroke-width", 1.5)
+            .attr("x1", 50)
+            .attr("y1",1170)
+            .attr("x2", 90)
+            .attr("y2", 1170);
+
+            mainsvg.append("line")
+            .style("stroke", "white")
+            .style("stroke-width", 1.5)
+            .attr("x1", 50)
+            .attr("y1",1170)
+            .attr("x2", 50)
+            .attr("y2", 1130);
+
+            //显示各区比例**************************************************************************************************************************************************
+
+            //显示边框
+
+            mainsvg.append("rect")
+            .attr("y", 1185)
+            .attr("x", 50)
+            .attr("width", 800)
+            .attr("height", 160)
+            .attr('stroke','#99ccff')
+            .attr('opacity',.3)
+
+            //显示轴
+            var area =['虹口区','黄浦区','静安区','普陀区','杨浦区','徐汇区','长宁区','宝山区','闵行区','浦东新区','嘉定区','松江区','青浦区','奉贤区','金山区','崇明区']
+
+            var area_scale = d3.scaleBand()
+            .range([0, 800])
+            .domain(area)
+            .paddingInner(1.2)
+            .paddingOuter(.8)
+
+            var area_axis = d3.axisBottom(area_scale).tickSize(0)
+
+            mainsvg.append("g").call(area_axis).selectAll(".tick text")
+            .attr("fill","white")
+            .attr('transform','translate(50,1320)')
+            .attr('font-size','0.9em')
+            .attr('fill','white').select('.domain').remove()
+
+            mainsvg.append("line")
+            .style("stroke", "white")
+            .style("stroke-width", .5)
+            .attr("x1", 50)
+            .attr("y1",1310)
+            .attr("x2", 850)
+            .attr("y2", 1310);
+
+            //显示标题
+
+            mainsvg.append("text")
+            .attr("y", 1210)
+            .attr("x", 240)
+            .text("各区管控区及社会面新增占比(%)")
+            .attr('font-size','.8em').attr('fill','white').attr('stroke','none');
+
+
+            //显示图例
+
+            mainsvg.append("text")
+            .attr("y", 1210)
+            .attr("x", 440)
+            .text("管控区：")
+            .attr('font-size','.8em').attr('fill','white').attr('stroke','none');
+
+            mainsvg.append("rect")
+                    .attr("y", 1200)
+                    .attr("x", 500)
+                    .attr("width", 20)
+                    .attr("height", 10)
+                    .style("fill", '#99ccff')
+                    .style('stroke','none')
+
+            mainsvg.append("text")
+            .attr("y", 1210)
+            .attr("x", 540)
+            .text("社会面：")
+            .attr('font-size','.8em').attr('fill','white').attr('stroke','none');
+
+            mainsvg.append("rect")
+                    .attr("y", 1200)
+                    .attr("x", 600)
+                    .attr("width", 20)
+                    .attr("height", 10)
+                    .style("fill", '#ffff99')
+                    .style('stroke','none')
+            //显示备注
+            mainsvg.append("text")
+            .attr("y", 1360)
+            .attr("x", 50)
+            .text("*备注：区由人口密度从左到右依次递减，数据来源于2021")
+            .attr('font-size','.4em').attr('fill','white').attr('stroke','none');
+
+
+            //显示新增阳性，累计阳性折线图**************************************************************************************************************************************************
+            //显示背景
+            mainsvg.append("rect")
+            .attr("y", 140)
+            .attr("x", 880)
+            .attr("width", 510)
+            .attr("height", 250)
+            .style("fill", 'none')
+            .style('stroke','#99ccff')
+            .style('opacity',.3)
+
+             //显示底轴
+            var date = ['3-11','3-16','3-21','3-26','3-31','4-5','4-11','4-16']
+
+            var date_scale = d3.scaleBand()
+            .range([0, 490])
+            .domain(date)
+            .paddingInner(1.2)
+            .paddingOuter(.8)
+
+            var date_axis = d3.axisBottom(date_scale).tickSize(0)
+
+            mainsvg.append("g").call(date_axis).selectAll(".tick text")
+            .attr("fill","white")
+            .attr('transform','translate(895,370)')
+            .attr('font-size','0.9em')
+            .attr('fill','white').select('.domain').remove()
+      
+            mainsvg.append("line")
+                    .style("stroke", "white")
+                    .style("stroke-width", .5)
+                    .attr("x1", 920)
+                    .attr("y1",365)
+                    .attr("x2", 920+430)
+                    .attr("y2", 365);
+
+            //显示标题
+            mainsvg.append("text")
+            .attr("y", 170)
+            .attr("x", 930)
+            .text("新增总体和社会面阳性病例")
+            .attr('font-size','.9em').attr('fill','white').attr('stroke','none');
+
+            //显示图例
+            mainsvg.append("text")
+            .attr("y", 170)
+            .attr("x", 1130)
+            .text("总体")
+            .attr('font-size','.9em').attr('fill','white').attr('stroke','none');
+
+            mainsvg.append("line")
+                    .style("stroke", "#cc0033")
+                    .style("stroke-width", 1)
+                    .attr("x1", 1180)
+                    .attr("y1",165)
+                    .attr("x2", 1180+30)
+                    .attr("y2", 165);
+            
+            mainsvg.append("text")
+                    .attr("y", 170)
+                    .attr("x", 1230)
+                    .text("社会(右)")
+                    .attr('font-size','.9em').attr('fill','white').attr('stroke','none');
+        
+            mainsvg.append("line")
+                        .style("stroke", "#ff9900")
+                        .style("stroke-width", 1)
+                        .attr("x1", 1300)
+                        .attr("y1",165)
+                        .attr("x2", 1300+30)
+                        .attr("y2", 165); 
+                        
+            //显示纵轴
+            mainsvg.append("line")
+                    .style("stroke", "white")
+                    .style("stroke-width", .5)
+                    .attr("x1", 920)
+                    .attr("y1",365)
+                    .attr("x2", 920)
+                    .attr("y2", 200)
+                    .attr('opacity',.2)
+            mainsvg.append("line")
+                    .style("stroke", "white")
+                    .style("stroke-width", .5)
+                    .attr("x1", 920+430)
+                    .attr("y1",365)
+                    .attr("x2", 920+430)
+                    .attr("y2", 200)
+                    .attr('opacity',.2);
+
+            
+
+            //显示上海市累计阳性/治疗+观察**************************************************************************************************************************************************  
+            //显示背景
+            mainsvg.append("rect")
+                    .attr("y", 140)
+                    .attr("x", 1410)
+                    .attr("width", 510)
+                    .attr("height", 250)
+                    .style("fill", 'none')
+                    .style('stroke','#99ccff')
+                    .style('opacity',.3)
+            
+            //显示底轴
+            mainsvg.append("g").call(date_axis).selectAll(".tick text")
+                    .attr("fill","white")
+                    .attr('transform','translate(1425,370)')
+                    .attr('font-size','0.9em')
+                    .attr('fill','white').select('.domain').remove()
+
+            mainsvg.append("line")
+                    .style("stroke", "white")
+                    .style("stroke-width", .5)
+                    .attr("x1", 1450)
+                    .attr("y1",365)
+                    .attr("x2", 1450+430)
+                    .attr("y2", 365);
+
+            //显示标题
+            mainsvg.append("text")
+            .attr("y", 170)
+            .attr("x", 1460)
+            .text("累计阳性、累计治疗+观察")
+            .attr('font-size','.9em').attr('fill','white').attr('stroke','none');
+
+            //显示图例
+            mainsvg.append("text")
+            .attr("y", 170)
+            .attr("x", 1660)
+            .text("阳性")
+            .attr('font-size','.9em').attr('fill','white').attr('stroke','none');
+
+            mainsvg.append("line")
+                    .style("stroke", "#cc0033")
+                    .style("stroke-width", 1)
+                    .attr("x1", 1710)
+                    .attr("y1",165)
+                    .attr("x2", 1710+30)
+                    .attr("y2", 165);
+            
+            mainsvg.append("text")
+                    .attr("y", 170)
+                    .attr("x", 1760)
+                    .text("在院(右)")
+                    .attr('font-size','.9em').attr('fill','white').attr('stroke','none');
+        
+            mainsvg.append("line")
+                        .style("stroke", "#ff9900")
+                        .style("stroke-width", 1)
+                        .attr("x1", 1830)
+                        .attr("y1",165)
+                        .attr("x2", 1830+30)
+                        .attr("y2", 165);
+
+            //显示纵轴
+            mainsvg.append("line")
+                    .style("stroke", "white")
+                    .style("stroke-width", .5)
+                    .attr("x1", 1450)
+                    .attr("y1",365)
+                    .attr("x2", 1450)
+                    .attr("y2", 200)
+                    .attr('opacity',.2)
+            mainsvg.append("line")
+                    .style("stroke", "white")
+                    .style("stroke-width", .5)
+                    .attr("x1", 1450+430)
+                    .attr("y1",365)
+                    .attr("x2", 1450+430)
+                    .attr("y2", 200)
+                    .attr('opacity',.2);
+
+
+
+            
+            //显示上海市三种人口密度区域内的新增阳性数量**************************************************************************************************************************************************    
+            //显示背景                
+            mainsvg.append("rect")
+                    .attr("y", 140)
+                    .attr("x", 1940)
+                    .attr("width", 510)
+                    .attr("height", 250)
+                    .style("fill", 'none')
+                    .style('stroke','#99ccff')
+                    .style('opacity',.3)
+
+            //显示底轴
+
+            mainsvg.append("g").call(date_axis).selectAll(".tick text")
+                    .attr("fill","white")
+                    .attr('transform','translate(1955,370)')
+                    .attr('font-size','0.9em')
+                    .attr('fill','white').select('.domain').remove()
+
+            mainsvg.append("line")
+                    .style("stroke", "white")
+                    .style("stroke-width", .5)
+                    .attr("x1", 1980)
+                    .attr("y1",365)
+                    .attr("x2", 1980+430)
+                    .attr("y2", 365);
+
+            //显示标题
+            mainsvg.append("text")
+            .attr("y", 170)
+            .attr("x", 1970)
+            .text("不同人口密度(万人/km2)区域新增情况")
+            .attr('font-size','.9em').attr('fill','white').attr('stroke','none');
+
+            //显示图例
+            mainsvg.append("text")
+            .attr("y", 170)
+            .attr("x", 2230)
+            .text(">2")
+            .attr('font-size','.9em').attr('fill','white').attr('stroke','none');
+
+            mainsvg.append("line")
+                    .style("stroke", "#99ccff")
+                    .style("stroke-width", 1)
+                    .attr("x1", 2260)
+                    .attr("y1",165)
+                    .attr("x2", 2260+20)
+                    .attr("y2", 165);
+
+             mainsvg.append("text")
+                    .attr("y", 170)
+                    .attr("x", 2290)
+                    .text("0.5-2")
+                    .attr('font-size','.9em').attr('fill','white').attr('stroke','none');
+        
+            mainsvg.append("line")
+                        .style("stroke", "#0099cc")
+                        .style("stroke-width", 1)
+                        .attr("x1", 2330)
+                        .attr("y1",165)
+                        .attr("x2", 2330+20)
+                        .attr("y2", 165);
+            
+             mainsvg.append("text")
+                        .attr("y", 170)
+                        .attr("x", 2360)
+                        .text("<0.5")
+                        .attr('font-size','.9em').attr('fill','white').attr('stroke','none');
+            
+            mainsvg.append("line")
+                            .style("stroke", "#3366cc")
+                            .style("stroke-width", 1)
+                            .attr("x1", 2400)
+                            .attr("y1",165)
+                            .attr("x2", 2400+20)
+                            .attr("y2", 165);            
+            //显示纵轴
+            mainsvg.append("line")
+                    .style("stroke", "white")
+                    .style("stroke-width", .5)
+                    .attr("x1", 1980)
+                    .attr("y1",365)
+                    .attr("x2", 1980)
+                    .attr("y2", 200)
+                    .attr('opacity',.2)
+            mainsvg.append("line")
+                    .style("stroke", "white")
+                    .style("stroke-width", .5)
+                    .attr("x1", 1980+430)
+                    .attr("y1",365)
+                    .attr("x2", 1980+430)
+                    .attr("y2", 200)
+                    .attr('opacity',.2);
+
+            // 显示气泡图**************************************************************************************************************************************************
+            //显示背景
+            mainsvg.append("rect")
+                    .attr("y", 410)
+                    .attr("x", 880)
+                    .attr("width", 1570)
+                    .attr("height", 520)
+                    .style("fill", 'none')
+                    .style('stroke','#99ccff')
+                    .style('opacity',.3)
+
+            //显示标题
+            mainsvg.append("text")
+                        .attr("y", 440)
+                        .attr("x", 1400)
+                        .text("各区管控范围及社会面新增气泡图")
+                        .attr('font-size','1em').attr('fill','white').attr('stroke','none');
+            
+            //显示图例
+            
+            mainsvg.append("text")
+                        .attr("y", 440)
+                        .attr("x", 1700)
+                        .text("管控范围")
+                        .attr('font-size','1em').attr('fill','white').attr('stroke','none');
+
+            mainsvg.append("circle")
+                        .style("stroke", "none")
+                        .style("fill", "#3366cc")
+                        .attr('opacity','.4')
+                        .attr("r", 8)
+                        .attr("cx", 1800)
+                        .attr("cy", 437)
+            
+            mainsvg.append("text")
+                        .attr("y", 440)
+                        .attr("x", 1850)
+                        .text("社会范围")
+                        .attr('font-size','1em').attr('fill','white').attr('stroke','none');
+
+            mainsvg.append("circle")
+                        .style("stroke", "none")
+                        .style("fill", "#ff6666")
+                        .attr('opacity','.4')
+                        .attr("r", 8)
+                        .attr("cx", 1950)
+                        .attr("cy", 437)
+
+            //显示纵轴
+
+            var area_scale = d3.scaleBand()
+            .range([0, 470])
+            .domain(area)
+            .paddingInner(1.2)
+            .paddingOuter(.8)
+
+            var area_axis = d3.axisLeft(area_scale).tickSize(0)
+
+            mainsvg.append("g").call(area_axis).selectAll(".tick text")
+            .attr("fill","white")
+            .attr('transform','translate(930,450)')
+            .attr('font-size','0.9em')
+            .attr('fill','white').select('.domain').remove()
+
+            for (var k=0;k<16;k++){
+
+                mainsvg.append("line")
+                    .style("stroke", "white")
+                    .style("stroke-width", .5)
+                    .attr("x1", 940)
+                    .attr("y1",450+area_scale(area[k])-7)
+                    .attr("x2", 940+1500)
+                    .attr("y2", 450+area_scale(area[k])-7)
+                    .attr('opacity',.2);
+
+                mainsvg.append("line")
+                    .style("stroke", "white")
+                    .style("stroke-width", .5)
+                    .attr("x1", 940)
+                    .attr("y1",450+area_scale(area[k])+7)
+                    .attr("x2", 940+1500)
+                    .attr("y2", 450+area_scale(area[k])+7)
+                    .attr('opacity',.2);
+            }
+
+            //显示横轴
+
+            var date_scale = d3.scaleBand()
+            .range([0, 1570])
+            .domain(date)
+            .paddingInner(1.2)
+            .paddingOuter(.8)
+
+            var date_axis = d3.axisBottom(date_scale).tickSize(0)
+
+            mainsvg.append("g").call(date_axis).selectAll(".tick text")
+            .attr("fill","white")
+            .attr('transform','translate(940,915)')
+            .attr('font-size','0.9em')
+            .attr('fill','white').select('.domain').remove()
+
+
+
+            // 显示统计分析**************************************************************************************************************************************************
+
+            mainsvg.append("text")
+                        .attr("y", 1080)
+                        .attr("x", 880)
+                        .text("统")
+                        .attr('font-size','1.5em')
+                        .attr('fill','#99ccff')
+                        .attr('stroke','none')
+                        .attr('opacity','.8');
+            
+            mainsvg.append("text")
+                        .attr("y", 1130)
+                        .attr("x", 880)
+                        .text("计")
+                        .attr('font-size','1.5em')
+                        .attr('fill','#99ccff')
+                        .attr('stroke','none')
+                        .attr('opacity','.8');
+                
+            mainsvg.append("text")
+                        .attr("y", 1180)
+                        .attr("x", 880)
+                        .text("分")
+                        .attr('font-size','1.5em')
+                        .attr('fill','#99ccff')
+                        .attr('stroke','none')
+                        .attr('opacity','.8');
+            
+            mainsvg.append("text")
+                        .attr("y", 1230)
+                        .attr("x", 880)
+                        .text("析")
+                        .attr('font-size','1.5em')
+                        .attr('fill','#99ccff')
+                        .attr('stroke','none')
+                        .attr('opacity','.8');
+
+            mainsvg.append("line")
+                        .style("stroke", "white")
+                        .style("stroke-width", 1)
+                        .attr("x1", 893)
+                        .attr("y1",950)
+                        .attr("x2", 893)
+                        .attr("y2", 1040)
+                        .attr('opacity',.5);
+
+            mainsvg.append("line")
+                        .style("stroke", "white")
+                        .style("stroke-width", 1)
+                        .attr("x1", 893)
+                        .attr("y1",1250)
+                        .attr("x2", 893)
+                        .attr("y2", 1350)
+                        .attr('opacity',.5);
+
+            
+            // 显示性别及年龄分析**************************************************************************************************************************************************
+
+            mainsvg.append("rect")
+                    .attr("y", 950)
+                    .attr("x", 930)
+                    .attr("width", 320)
+                    .attr("height", 400)
+                    .style("fill", 'none')
+                    .style('stroke','#99ccff')
+                    .style('opacity',.3)
+            mainsvg.append("text")
+                    .attr("y", 1340)
+                    .attr("x", 1020)
+                    .text("性别比例及年龄分布")
+                    .attr('font-size','.9em')
+                    .attr('fill','white')
+                    .attr('stroke','none');
+
+            // 显示各区疫情发展相关性**************************************************************************************************************************************************
+
+            mainsvg.append("rect")
+                    .attr("y", 950)
+                    .attr("x", 1270)
+                    .attr("width", 400)
+                    .attr("height", 400)
+                    .style("fill", 'none')
+                    .style('stroke','#99ccff')
+                    .style('opacity',.3)
+            mainsvg.append("text")
+                    .attr("y", 1340)
+                    .attr("x", 1400)
+                    .text("各区疫情发展相关性")
+                    .attr('font-size','.9em')
+                    .attr('fill','white')
+                    .attr('stroke','none');
+
+            // 显示各区阳性率热图**************************************************************************************************************************************************
+
+            mainsvg.append("rect")
+                    .attr("y", 950)
+                    .attr("x", 1690)
+                    .attr("width", 200)
+                    .attr("height", 400)
+                    .style("fill", 'none')
+                    .style('stroke','#99ccff')
+                    .style('opacity',.3)
+            mainsvg.append("text")
+                    .attr("y", 1340)
+                    .attr("x", 1730)
+                    .text("各区阳性率热图")
+                    .attr('font-size','.9em')
+                    .attr('fill','white')
+                    .attr('stroke','none');
+
+            // 显示补充分析**************************************************************************************************************************************************
+
+            mainsvg.append("rect")
+                    .attr("y", 950)
+                    .attr("x", 1910)
+                    .attr("width", 540)
+                    .attr("height", 400)
+                    .style("fill", 'none')
+                    .style('stroke','#99ccff')
+                    .style('opacity',.3)
+
+            mainsvg.append("text")
+                    .attr("y", 1340)
+                    .attr("x", 2150)
+                    .text("待补充")
+                    .attr('font-size','.9em')
+                    .attr('fill','white')
+                    .attr('stroke','none');
+
+        </script>
+</body>
+</html>
