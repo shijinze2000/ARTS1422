@@ -56,23 +56,6 @@
             .text("日期：")
             .attr('font-size','1。5em').attr('fill','white').attr('stroke','none');
 
-            //显示上三角
-
-            var uptriangle = d3.symbol().type(d3.symbolTriangle).size(100)
-
-            mainsvg.append("path")
-            .attr('d',uptriangle)
-            .attr('fill','#99ccff')
-            .attr('transform','translate(500,95)')
-
-            //显示下三角
-
-            var downtriangle = d3.symbol().type(d3.symbolTriangle).size(100)
-            
-            mainsvg.append("path")
-            .attr('d',downtriangle)
-            .attr('fill','#99ccff')
-            .attr('transform','translate(500,115) rotate(180) ')
 
             
             //显示新增确诊**************************************************************************************************************************************************
@@ -849,19 +832,21 @@
              d3.csv("https://raw.githubusercontent.com/shijinze2000/ARTS1422/main/buble.csv",function(data){
 
                 var index = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16']
-                var date_index = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45"]
+                var date_index = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45",'46','47']
                 var area =['浦东新区','黄浦区','徐汇区','长宁区','静安区','普陀区','虹口区','杨浦区','闵行区','宝山区','嘉定区','金山区','松江区','青浦区','奉贤区','崇明区']
 
                 var data_guankong = new Array
                 var data_fengxian = new Array
                 var data_bili = new Array
 
+                var Total_day = 47
+
+
                 var date_index_scale2 = d3.scalePow().exponent(2)
-                .domain([1,45])
+                .domain([1,Total_day])
                 .range([0, 700])
 
-                var Total_day = 45
-
+               
                 for (var n=0;n<Total_day;n++){
                     data_guankong.push(data[n])
                     data_fengxian.push(data[Total_day+n])
@@ -873,7 +858,7 @@
                     mainsvg.append('rect')
                     .attr("y", 430+area_scale(area[m]))
                     .attr("x", 940)
-                    .attr("width", data_bili[0][index[m]]*500)
+                    .attr("width", data_bili[0][index[m]]/400)
                     .attr("height", 40)
                     .style("fill", '#99ccff')
                     .style('stroke','none')
@@ -1134,6 +1119,8 @@
                     .attr('stroke','none');
 
             })
+
+            //显示折线图
 
             d3.csv("https://raw.githubusercontent.com/shijinze2000/ARTS1422/main/time.csv",function(data){
 
@@ -1409,6 +1396,54 @@
             
             
             })
+
+            // 交互部分
+
+            d3.csv("https://raw.githubusercontent.com/shijinze2000/ARTS1422/main/interaction.csv",function(data){
+
+                        var interaction_data = new Array
+                        var days = 47
+
+                        for (var i=0;i<days;i++){
+                            interaction_data.push(data[i])
+                         } 
+
+                        // 预设
+
+                        // 日期
+                        date_month = interaction_data[0]['1']
+                        date_day = interaction_data[0]['2']
+                        mainsvg.append("text")
+                        .attr("y", 113)
+                        .attr("x", 350)
+                        .text(date_month.toString()+' 月 '+date_day.toString()+' 日 ')
+                        .attr('font-size','1.5em')
+                        .attr('fill','#ff6666')
+                        .attr('stroke','none');
+
+                        //新增
+
+
+                        //显示上三角
+
+                        var uptriangle = d3.symbol().type(d3.symbolTriangle).size(100)
+
+                        mainsvg.append("path")
+                        .attr('d',uptriangle)
+                        .attr('fill','#99ccff')
+                        .attr('transform','translate(500,95)')
+            
+                        //显示下三角
+            
+                        var downtriangle = d3.symbol().type(d3.symbolTriangle).size(100)
+                        
+                        mainsvg.append("path")
+                        .attr('d',downtriangle)
+                        .attr('fill','#99ccff')
+                        .attr('transform','translate(500,115) rotate(180) ')
+
+                    })
+            
         </script>
 </body>
 </html>
